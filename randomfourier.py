@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 npix = 4
 
+assert(npix % 2 != 0)
 mean = np.zeros(npix * npix)
 cov = np.identity(npix * npix)
 result1 = np.random.multivariate_normal(mean, cov, 2)
@@ -16,33 +17,19 @@ result1 = np.array([complex(a[i], b[i]) for i in range(npix * npix)])
 #result2 = result2.reshape ((npix, npix))
 
 result2 = result1.reshape((npix, npix))
-origin = (npix / 2, npix / 2)
+#origin = (npix / 2, npix / 2)
+origin = (0,0)
 result2[origin] = result2[origin].real
 
+result2[1::-1,-1:npix/2-1:-1] = result2[1:,1:npix/2].conj()
+result2[:npix/2-1:-1,0] = result2[1:npix/2,0].conj()
+result2[0,:npix/2-1:-1] = result2[0,1:npix/2].conj()
 if npix % 2 == 0:
-	for i in range(1, npix):
-		for j in range(1, npix / 2):
-			result2[i, j] = result2[i, npix - j].conjugate()
-	result2copy = np.copy(result2)
-	for i in range(1, npix / 2):
-		for j in range(1, npix / 2):
-			result2copy[i, j] = result2copy[npix - i, j]
-	for i in range((npix / 2) + 1, npix):
-		for j in range(1, npix / 2):
-			result2[i, j] = result2[npix - i, j]
-	for i in range(1, npix / 2):
-		for j in range(1, npix / 2):
-			result2[i, j] = result2copy[i, j]
-	for i in range(1, npix / 2):
-		for j in range (npix / 2, (npix / 2) + 1):
-			result2[i, j] = result2[npix - i, j].conjugate()
-	for i in range(npix):
-		result2[(i, 0)] = result2[(i, 0)].real
-	for j in range(npix):
-		result2[(0, j)] = result2[(0, j)].real
-	print result2
+    result2[npix/2] = result2[npix/2].real
+    result2[:,npix/2] = result2[:,npix/2].real
+    #result2[1:,1:npix/2] = result2[-2::-1,-1:npix/2-1:-1].conj()
 
-if npix % 2 == 1:
+import IPython; IPython.embed()
 
 #k_radius = 3
 #for i in np.arange(npix):
